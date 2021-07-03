@@ -18,6 +18,7 @@ dbConnection();
 //Rutas
 
 app.use('/api/usuarios', require('./routes/usuarios.routes'));
+app.use('/api/login', require('./routes/auth.routes.js'));
 
 //Puerto donde corre el proyecto
 app.listen(process.env.PORT, () => {

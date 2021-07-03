@@ -48,7 +48,7 @@ const UsuarioSchema = Schema({
 //Para obtener el uid y no el _id
 
 UsuarioSchema.method('toJSON', function() {
-    const { __v, _id, ...object } = this.toObject();
+    const { __v, _id, password, ...object } = this.toObject();
     object.uid = _id;
     return object;
 })
