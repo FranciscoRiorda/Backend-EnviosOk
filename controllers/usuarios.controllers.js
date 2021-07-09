@@ -8,11 +8,22 @@ const { generarJWT } = require('../helpers/jwt');
 
 const getUsuarios = async(req, resp) => {
 
-    const usuarios = await Usuario.find({}, 'nombre apellido dni email domicilio nacimiento password');
+    const desde = Number(req.query.desde) || 0;
+
+    //Promise.all >> ejecuta todas las promesas en su interior. Para que se ejecuten simultaneamente y no tengas pérdidas de tiempo al cargar
+    const [usuarios, total] = await Promise.all([
+        Usuario
+        .find({}, 'nombre apellido dni email domicilio nacimiento password')
+        .skip(desde)
+        .limit(10),
+
+        Usuario.count()
+    ]);
 
     resp.json({
         ok: true,
-        usuarios
+        usuarios,
+        total
         // uid: req.uid >>>> de esa manera puedo ver el id del usuario que realizó la petición desde postman
     });
 
