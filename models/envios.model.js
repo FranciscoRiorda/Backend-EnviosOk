@@ -27,7 +27,7 @@ const EnviosSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
     },
-    imgFactura: {
+    img: {
         type: String
     }
 }, { collection: 'Envios' });

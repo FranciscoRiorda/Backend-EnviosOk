@@ -13,11 +13,11 @@ const getUsuarios = async(req, resp) => {
     //Promise.all >> ejecuta todas las promesas en su interior. Para que se ejecuten simultaneamente y no tengas pérdidas de tiempo al cargar
     const [usuarios, total] = await Promise.all([
         Usuario
-        .find({}, 'nombre apellido dni email domicilio nacimiento password')
+        .find({}, 'nombre apellido dni email domicilio nacimiento password img')
         .skip(desde)
         .limit(10),
 
-        Usuario.count()
+        Usuario.countDocuments()
     ]);
 
     resp.json({

@@ -6,7 +6,7 @@ const Gastos = require('../models/gastos.model');
 const getGastos = async(req, res = response) => {
 
     const gastos = await Gastos.find()
-        .populate('usuario', 'nombre apellido email');
+        .populate('usuario', 'nombre apellido email img');
 
     res.json({
         ok: true,

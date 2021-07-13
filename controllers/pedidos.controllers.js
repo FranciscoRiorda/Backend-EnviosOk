@@ -6,7 +6,7 @@ const Pedidos = require('../models/pedidos.model');
 const getPedidos = async(req, res = response) => {
 
     const pedidos = await Pedidos.find()
-        .populate('usuario', 'nombre apellido email');
+        .populate('usuario', 'nombre apellido email img');
 
     res.json({
         ok: true,

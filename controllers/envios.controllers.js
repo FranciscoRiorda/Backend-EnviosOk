@@ -6,7 +6,7 @@ const Envios = require('../models/envios.model');
 const getEnvios = async(req, res = response) => {
 
     const envios = await Envios.find()
-        .populate('usuario', 'nombre apellido email');
+        .populate('usuario', 'nombre apellido email img');
 
     res.json({
         ok: true,

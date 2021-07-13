@@ -19,7 +19,7 @@ const GastosSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
     },
-    imgFactura: {
+    img: {
         type: String
     }
 }, { collection: 'Gastos' });
