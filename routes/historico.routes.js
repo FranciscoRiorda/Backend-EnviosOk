@@ -26,12 +26,15 @@ router.post('/', [
 
 //Actualizar envio
 router.put('/:id', [
+        validarJWT,
+        check('dineroDisponible', 'El dinero disponible es necesario').not().isEmpty(),
+        validarCampos
 
     ],
     actualizarHistorico);
 
 
-router.delete('/:id', borrarHistorico);
+router.delete('/:id', validarJWT, borrarHistorico);
 
 //Exportar ruta para usarlo en otros 
 module.exports = router;

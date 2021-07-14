@@ -34,12 +34,22 @@ router.post('/', [
 
 //Actualizar pedido
 router.put('/:id', [
+        validarJWT,
+        check('nombreCliente', 'El nombre del cliente es necesario').not().isEmpty(),
+        check('diaRetiro', 'El día de retiro del paquete es necesario').not().isEmpty(),
+        check('domicilioRetiro', 'El domicilio de retiro del paquete es necesario').not().isEmpty(),
+        check('estadoRetiro', 'El estado del retiro es necesario').not().isEmpty(),
+        check('diaEntrega', 'El estado de entrega es necesario').not().isEmpty(),
+        check('domicilioEntrega', 'El domicilio de entrega es necesario').not().isEmpty(),
+        check('mailCliente', 'El correo del cliente es necesario').not().isEmpty(),
+        check('costoEnvio', 'El costo del envío es necesario').not().isEmpty(),
+        validarCampos
 
     ],
     actualizarPedido);
 
 
-router.delete('/:id', borrarPedido);
+router.delete('/:id', validarJWT, borrarPedido);
 
 //Exportar ruta para usarlo en otros 
 module.exports = router;

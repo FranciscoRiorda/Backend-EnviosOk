@@ -43,20 +43,72 @@ const crearBalance = async(req, res = response) => {
 
 }
 
-const actualizarBalance = (req, res = response) => {
+const actualizarBalance = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Actualizar Balance'
-    })
+    const id = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const balance = await Balance.findById(id);
+
+        if (!balance) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encontrado un balance con ese id'
+            });
+        }
+
+        cambiarBalance = {
+            ...req.body,
+            usuario: uid
+        };
+
+        const balanceActualizado = await Balance.findByIdAndUpdate(id, cambiarBalance, { new: true });
+
+        res.json({
+            ok: true,
+            balanceActualizado
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al actualizar balance'
+        });
+    }
+
 }
 
-const borrarBalance = (req, res = response) => {
+const borrarBalance = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Borrar Balance'
-    })
+    const id = req.params.id;
+
+    try {
+
+        const balance = await Balance.findById(id);
+
+        if (!balance) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encontrado un balance con ese id'
+            });
+        }
+
+        await Balance.findByIdAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: 'Balance ' + id + ' borrado correctamente'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al borrar el balance'
+        });
+    }
+
 }
 
 module.exports = {

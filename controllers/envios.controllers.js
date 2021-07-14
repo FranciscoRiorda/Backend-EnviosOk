@@ -42,20 +42,78 @@ const crearEnvio = async(req, res = response) => {
 
 }
 
-const actualizarEnvio = (req, res = response) => {
+const actualizarEnvio = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Actualizar Envio'
-    })
+    const id = req.params.id;
+    const uid = req.uid;
+
+
+    try {
+
+        const envio = await Envios.findById(id);
+
+        if (!envio) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encontrado pedido con ese id'
+            });
+        }
+
+        //Usuario que ha modificado el envío
+        const cambiarEnvio = {
+            ...req.body,
+            usuario: uid
+        }
+
+        const envioActualizado = await Envios.findByIdAndUpdate(id, cambiarEnvio, { new: true });
+
+        res.json({
+            ok: true,
+            envioActualizado
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al actualizar envío'
+        });
+    }
+
+
+
 }
 
-const borrarEnvio = (req, res = response) => {
+const borrarEnvio = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Borrar Envio'
-    })
+    const id = req.params.id;
+
+
+    try {
+
+        const envio = await Envios.findById(id);
+
+        if (!envio) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encontrado un envío con ese id'
+            });
+        }
+
+        await Envios.findByIdAndDelete(id);
+
+
+        res.json({
+            ok: true,
+            msg: 'Envío borrado correctamente'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al borrar envío'
+        });
+    }
+
 }
 
 module.exports = {

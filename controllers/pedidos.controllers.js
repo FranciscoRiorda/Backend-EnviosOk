@@ -45,20 +45,77 @@ const crearPedido = async(req, res = response) => {
 
 }
 
-const actualizarPedido = (req, res = response) => {
+const actualizarPedido = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Actualizar pedido'
-    })
+    const id = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const pedidos = await Pedidos.findById(id);
+
+        if (!pedidos) {
+            return res.status(404).json({
+                ok: true,
+                msg: 'Pedido no encontrado por id'
+            });
+        }
+
+        const cambiosPedidos = {
+                ...req.body,
+                usuario: uid
+            }
+            //{new:true} >>> muestra los datos mas actualizados
+        const pedidosActualizados = await Pedidos.findByIdAndUpdate(id, cambiosPedidos, { new: true });
+
+        res.json({
+            ok: true,
+            pedidosActualizados
+        });
+
+
+
+
+    } catch (error) {
+        res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al actualizar pedido'
+        });
+
+    }
+
 }
 
-const borrarPedido = (req, res = response) => {
+const borrarPedido = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Borrar pedido'
-    })
+    const id = req.params.id;
+
+    try {
+
+        const pedidos = await Pedidos.findById(id);
+
+        if (!pedidos) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se encontró un pedido con ese id'
+            });
+
+        }
+
+        await Pedidos.findByIdAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: 'Pedido elminado correctamente'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al borrar pedido'
+        });
+    }
+
 }
 
 module.exports = {

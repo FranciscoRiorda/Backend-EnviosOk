@@ -29,12 +29,18 @@ router.post('/', [
 
 //Actualizar envio
 router.put('/:id', [
+        validarJWT,
+        check('fechaEnvio', 'La fecha de envío es necesaria').not().isEmpty(),
+        check('numDeEnvio', 'El número de envío es necesario').not().isEmpty(),
+        check('nombreCliente', 'El nombre del cliente es necesario').not().isEmpty(),
+        check('costoEnvio', 'El costo de envío es necesario').not().isEmpty(),
+        validarCampos
 
     ],
     actualizarEnvio);
 
 
-router.delete('/:id', borrarEnvio);
+router.delete('/:id', validarJWT, borrarEnvio);
 
 //Exportar ruta para usarlo en otros 
 module.exports = router;

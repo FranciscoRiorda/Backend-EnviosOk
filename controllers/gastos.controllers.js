@@ -43,20 +43,72 @@ const crearGasto = async(req, res = response) => {
 
 }
 
-const actualizarGasto = (req, res = response) => {
+const actualizarGasto = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Actualizar Gasto'
-    })
+    const id = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const gasto = await Gastos.findById(id);
+
+        if (!gasto) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encotrado un gsato con ese id'
+            });
+        }
+
+        cambioGastos = {
+            ...req.body,
+            usuario: uid
+        };
+
+        const gastoActualizado = await Gastos.findByIdAndUpdate(id, cambioGastos, { new: true });
+
+        res.json({
+            ok: true,
+            gastoActualizado
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al actualizar gasto'
+        });
+    }
+
 }
 
-const borrarGasto = (req, res = response) => {
+const borrarGasto = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Borrar Gasto'
-    })
+    const id = req.params.id;
+
+    try {
+
+        const gasto = await Gastos.findById(id);
+
+        if (!gasto) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encontrado un gasto con ese id'
+            });
+        }
+
+        await Gastos.findByIdAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: 'Gasto borrado correctamente'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al borrar gasto'
+        });
+    }
+
 }
 
 module.exports = {

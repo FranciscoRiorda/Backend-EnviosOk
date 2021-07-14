@@ -33,12 +33,22 @@ router.post('/', [
 
 //Actualizar envio
 router.put('/:id', [
+        validarJWT,
+        check('mesAño', 'El mes y año son necesarios').not().isEmpty(),
+        check('gastoMes', 'El gasto mensual es necesario').not().isEmpty(),
+        check('ingresoMes', 'El ingreso mensual es necesario').not().isEmpty(),
+        check('ganancia', 'La ganancia es necesaria').not().isEmpty(),
+        check('sueldosMes', 'El total de sueldos mensuales es necesario').not().isEmpty(),
+        check('pozoInicial', 'El pozo inicial del mes es necesario').not().isEmpty(),
+        check('pozoFinal', 'El pozo final del mes es necesario').not().isEmpty(),
+        check('cierreMes', 'El estado del mes es necesario').not().isEmpty(),
+        validarCampos
 
     ],
     actualizarBalance);
 
 
-router.delete('/:id', borrarBalance);
+router.delete('/:id', validarJWT, borrarBalance);
 
 //Exportar ruta para usarlo en otros 
 module.exports = router;

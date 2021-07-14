@@ -28,12 +28,17 @@ router.post('/', [
 
 //Actualizar envio
 router.put('/:id', [
+        validarJWT,
+        check('fecha', 'La fecha del gasto es necesaria').not().isEmpty(),
+        check('descripcion', 'La descripción del gastoe es necesaria').not().isEmpty(),
+        check('importe', 'El importe gastado es necesario').not().isEmpty(),
+        validarCampos
 
     ],
     actualizarGasto);
 
 
-router.delete('/:id', borrarGasto);
+router.delete('/:id', validarJWT, borrarGasto);
 
 //Exportar ruta para usarlo en otros 
 module.exports = router;

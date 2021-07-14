@@ -42,20 +42,72 @@ const crearHistorico = async(req, res = response) => {
 
 }
 
-const actualizarHistorico = (req, res = response) => {
+const actualizarHistorico = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Actualizar Historico'
-    })
+    const id = req.params.id;
+    const uid = req.uid;
+
+    try {
+
+        const historico = await Historico.findById(id);
+
+        if (!historico) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encontrado un historico con ese id'
+            });
+        }
+
+        cambiarHistorico = {
+            ...req.body,
+            usuario: uid
+        };
+
+        const historicoActualizado = await Historico.findByIdAndUpdate(id, cambiarHistorico, { new: true });
+
+        res.json({
+            ok: true,
+            historicoActualizado
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al actualizar histórico'
+        });
+    }
+
 }
 
-const borrarHistorico = (req, res = response) => {
+const borrarHistorico = async(req, res = response) => {
 
-    res.json({
-        ok: true,
-        msg: 'Borrar Historico'
-    })
+    const id = req.params.id;
+
+    try {
+
+        const historico = await Historico.findById(id);
+
+        if (!historico) {
+            return res.status(404).json({
+                ok: false,
+                msg: 'No se ha encontrado un historico con ese id'
+            });
+        }
+
+        await Historico.findByIdAndDelete(id);
+
+        res.json({
+            ok: true,
+            msg: 'Historico borrado'
+        });
+
+    } catch (error) {
+        return res.status(500).json({
+            ok: false,
+            msg: 'Error inesperado al borrar historico'
+        });
+    }
+
 }
 
 module.exports = {
