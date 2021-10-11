@@ -15,30 +15,30 @@ const getTodo = async(req, res = response) => {
     //Expresión regular >> en este caso se utiliza para que la búesqueda sea insensible.
     const regex = new RegExp(busqueda, 'i');
 
-
-    const [usuarios, usuariosApellido, domicilioRetiro, domicilioEntrega, mailCliente, nombreCliente, nombreClienteEnv, numDeEnvio] = await Promise.all([
+    const [usuarios, pedidos, envios, gastos] = await Promise.all([
         Usuario.find({ nombre: regex }),
         Usuario.find({ apellido: regex }),
+        Usuario.find({ dni: regex }),
+        Usuario.find({ telefono: regex }),
+        Usuario.find({ email: regex }),
+        Pedidos.find({ numPedido: regex }),
         Pedidos.find({ domicilioRetiro: regex }),
         Pedidos.find({ domicilioEntrega: regex }),
         Pedidos.find({ mailCliente: regex }),
         Pedidos.find({ nombreCliente: regex }),
         Envios.find({ nombreCliente: regex }),
         Envios.find({ numDeEnvio: regex }),
+        Gastos.find({ descripcion: regex })
 
-    ])
+    ]);
 
     res.json({
         ok: true,
         usuarios,
-        usuariosApellido,
-        domicilioRetiro,
-        domicilioEntrega,
-        mailCliente,
-        nombreCliente,
-        nombreClienteEnv,
-        numDeEnvio
-    })
+        pedidos,
+        envios,
+        gastos
+    });
 }
 
 
@@ -52,15 +52,33 @@ const getColeccion = async(req, res = response) => {
     let data = [];
 
     switch (tabla) {
+
         case 'pedidos':
 
-            data = await Promise.all([
+            data = await Pedidos.find({ nombreCliente: regex })
+                .populate('usuario');
 
-                Pedidos.find({ domicilioRetiro: regex }),
-                Pedidos.find({ domicilioEntrega: regex }),
-                Pedidos.find({ mailCliente: regex }),
-                Pedidos.find({ nombreCliente: regex })
-            ]);
+            break;
+
+            // case 'pedidos':
+
+            //     data = await Promise.all([
+
+            //         Pedidos.find({ domicilioRetiro: regex }),
+            //         Pedidos.find({ domicilioEntrega: regex }),
+            //         Pedidos.find({ mailCliente: regex }),
+            //         Pedidos.find({ nombreCliente: regex })
+            //     ]);
+
+            //     break;
+
+        case 'gastos':
+
+            data = await Gastos.find({ descripcion: regex })
+                .populate('usuario');
+            //Gastos.find({ importe: regex }),
+            //Gastos.find({ usuario: regex })
+
 
             break;
 
@@ -76,13 +94,20 @@ const getColeccion = async(req, res = response) => {
 
         case 'usuarios':
 
-            data = await Promise.all([
+            data = await
+            Usuario.find({ apellido: regex });
 
-                Usuario.find({ nombre: regex }),
+            break;
+
+
+        case 'usuarios':
+
+            data = await
+            Usuario.find({ nombre: regex }),
                 Usuario.find({ apellido: regex }),
-                Usuario.find({ dni: regex })
-
-            ]);
+                Usuario.find({ dni: regex }),
+                Usuario.find({ telefono: regex }),
+                Usuario.find({ email: regex })
 
             break;
 
@@ -90,7 +115,7 @@ const getColeccion = async(req, res = response) => {
             //return para finalizar. Si llego a este punto no deseo continuar.
             return res.status(400).json({
                 ok: false,
-                msg: 'La tabla tiene que ser usuarios/medicos/hospitales'
+                msg: 'La tabla tiene que ser gastos/usuarios/envios/pedidos'
             });
 
     }

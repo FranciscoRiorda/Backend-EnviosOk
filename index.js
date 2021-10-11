@@ -2,22 +2,25 @@
 require('dotenv').config();
 
 const express = require('express');
-const cors = require('./database/config');
+const cors = require('cors');
 
 const { dbConnection } = require('./database/config');
 
 const app = express();
 
-// app.use(cors());
+app.use(cors());
 
 //Lectura y parseo del body
 app.use(express.json());
 
 dbConnection();
 
+app.use(express.static('public'));
+
 //Rutas
 
 app.use('/api/usuarios', require('./routes/usuarios.routes'));
+app.use('/api/clientes', require('./routes/clientes.routes'));
 app.use('/api/pedidos', require('./routes/pedidos.routes'));
 app.use('/api/envios', require('./routes/envios.routes'));
 app.use('/api/gastos', require('./routes/gastos.routes'));
@@ -33,4 +36,4 @@ app.listen(process.env.PORT, () => {
     console.log(('Servidor corriendo en puerto ' + process.env.PORT));
 })
 
-//Usuario mongo atlas franr - OdpXhG5UWoJubJC9
+//Usuario mongo atlas franr - Ou9NE0yQc5p13elN

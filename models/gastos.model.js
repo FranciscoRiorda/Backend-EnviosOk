@@ -11,7 +11,7 @@ const GastosSchema = Schema({
         require: true
     },
     importe: {
-        type: String,
+        type: Number,
         require: true
     },
     usuario: {

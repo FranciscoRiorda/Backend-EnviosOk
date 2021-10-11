@@ -1,41 +1,41 @@
 const { response } = require('express');
 
-const Pedidos = require('../models/pedidos.model');
+const Clientes = require('../models/clientes.model');
 
 
-const getPedidos = async(req, res = response) => {
+const getClientes = async(req, res = response) => {
 
     const desde = Number(req.query.desde) || 0;
 
-    const [pedidos, total] = await Promise.all([
-        Pedidos
-        .find({}, 'nombreCliente mailCliente diaRetiro domicilioRetiro telEntregaPaq estadoRetiro diaEntrega domicilioEntrega telRecibePaq estadoEntrega costoEnvio observaciones')
+    const [clientes, total] = await Promise.all([
+        Clientes
+        .find({}, 'nombre dni telefono email domicilio observaciones')
         .skip(desde)
         .limit(50)
         .populate('usuario', 'nombre apellido email img'),
 
-        Pedidos.countDocuments()
+        Clientes.countDocuments()
     ]);
 
     res.json({
         ok: true,
-        pedidos,
+        clientes,
         total
     });
 };
 
-const getPedidosById = async(req, res = response) => {
+const getClientesById = async(req, res = response) => {
 
     const id = req.params.id;
 
     try {
 
-        const pedido = await Pedidos.findById(id)
+        const cliente = await Clientes.findById(id)
             .populate('usuario', 'nombre apellido email img');
 
         res.json({
             ok: true,
-            pedido
+            cliente
         });
 
     } catch (error) {
@@ -43,112 +43,113 @@ const getPedidosById = async(req, res = response) => {
         console.log(error);
         res.json({
             ok: true,
-            msg: 'Error al encontrar pedido por id'
+            msg: 'Error al encontrar cliente por id'
         });
     }
 };
 
 
 //Petición asincrona 'async'
-const crearPedido = async(req, res = response) => {
+const crearCliente = async(req, res = response) => {
 
     //para que se grabe qué usuario ha creado el nuevo pedido, debemos buscar el uid que ya se encuentra identificado en el token al momento de loguearse
     const uid = req.uid;
-    const pedido = new Pedidos({
+
+    const cliente = new Clientes({
         usuario: uid,
         ...req.body
     });
 
     try {
 
-        const pedidosDB = await pedido.save();
+        const clientesDB = await cliente.save();
 
         res.json({
             ok: true,
-            pedido: pedidosDB
+            cliente: clientesDB
         });
 
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error insesperado al crear usuario'
+            msg: 'Error insesperado al crear cliente'
         });
     }
 };
 
 
-const actualizarPedido = async(req, res = response) => {
+const actualizarCliente = async(req, res = response) => {
 
     const id = req.params.id;
     const uid = req.uid;
 
     try {
 
-        const pedidos = await Pedidos.findById(id);
+        const clientes = await Clientes.findById(id);
 
-        if (!pedidos) {
+        if (!clientes) {
             return res.status(404).json({
                 ok: true,
-                msg: 'Pedido no encontrado por id'
+                msg: 'Cliente no encontrado por id'
             });
         }
 
-        const cambiosPedidos = {
+        const cambiosClientes = {
             ...req.body,
             usuario: uid
         };
         //{new:true} >>> muestra los datos mas actualizados
-        const pedidosActualizados = await Pedidos.findByIdAndUpdate(id, cambiosPedidos, { new: true });
+        const clientesActualizados = await Clientes.findByIdAndUpdate(id, cambiosClientes, { new: true });
 
         res.json({
             ok: true,
-            pedidosActualizados
+            clientesActualizados
         });
 
     } catch (error) {
         res.status(500).json({
             ok: false,
-            msg: 'Error inesperado al actualizar pedido'
+            msg: 'Error inesperado al actualizar cliente'
         });
     }
 };
 
-const borrarPedido = async(req, res = response) => {
+const borrarCliente = async(req, res = response) => {
 
     const id = req.params.id;
 
     try {
 
-        const pedidos = await Pedidos.findById(id);
+        const clientes = await Clientes.findById(id);
 
-        if (!pedidos) {
+        if (!clientes) {
             return res.status(404).json({
                 ok: false,
-                msg: 'No se encontró un pedido con ese id'
+                msg: 'No se encontró un cliente con ese id'
             });
         }
 
-        await Pedidos.findByIdAndDelete(id);
+        await Clientes.findByIdAndDelete(id);
 
         res.json({
             ok: true,
-            msg: 'Pedido elminado correctamente'
+            msg: 'Cliente elminado correctamente'
         });
 
     } catch (error) {
         return res.status(500).json({
             ok: false,
-            msg: 'Error inesperado al borrar pedido'
+            msg: 'Error inesperado al borrar cliente'
         });
     }
 };
 
 
 module.exports = {
-    getPedidos,
-    crearPedido,
-    actualizarPedido,
-    borrarPedido,
-    getPedidosById
+    getClientes,
+    crearCliente,
+    actualizarCliente,
+    borrarCliente,
+    getClientesById
 };

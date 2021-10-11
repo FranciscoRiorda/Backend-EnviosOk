@@ -2,7 +2,15 @@ const { Schema, model } = require('mongoose')
 
 const PedidosSchema = Schema({
 
+    // numPedido: {
+    //     type: Number,
+    //     require: true
+    // },
     nombreCliente: {
+        type: String,
+        require: true
+    },
+    mailCliente: {
         type: String,
         require: true
     },
@@ -14,11 +22,11 @@ const PedidosSchema = Schema({
         type: String,
         require: true
     },
-    nombreEntregPaq: {
-        type: String,
-        require: false
-    },
-    telEntregPaq: {
+    // nombreEntregPaq: {
+    //     type: String,
+    //     require: false
+    // },
+    telEntregaPaq: {
         type: Number,
         require: false
     },
@@ -35,30 +43,26 @@ const PedidosSchema = Schema({
         type: String,
         require: true
     },
-    nombreRecibePaq: {
-        type: String,
-        require: false,
-    },
+    // nombreRecibePaq: {
+    //     type: String,
+    //     require: false,
+    // },
     telRecibePaq: {
         type: Number,
         require: false
-    },
-    mailCliente: {
-        type: String,
-        require: true
-    },
-    observacones: {
-        type: String,
-        require: false
-    },
-    costoEnvio: {
-        type: String,
-        require: true
     },
     estadoEntrega: {
         type: String,
         require: true,
         default: 'Pendiente'
+    },
+    costoEnvio: {
+        type: String,
+        require: true
+    },
+    observaciones: {
+        type: String,
+        require: false
     },
     usuario: {
         required: true,
@@ -73,6 +77,6 @@ const PedidosSchema = Schema({
 PedidosSchema.method('toJSON', function() {
     const { __v, ...Object } = this.toObject();
     return Object;
-})
+});
 
 module.exports = model('Pedidos', PedidosSchema);

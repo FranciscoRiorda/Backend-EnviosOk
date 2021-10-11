@@ -5,14 +5,24 @@ const Gastos = require('../models/gastos.model');
 
 const getGastos = async(req, res = response) => {
 
-    const gastos = await Gastos.find()
-        .populate('usuario', 'nombre apellido email img');
+    const desde = Number(req.query.desde) || 0;
+
+    const [gastos, total] = await Promise.all([
+        Gastos
+        .find({}, 'fecha descripcion importe')
+        .skip(desde)
+        .limit(15)
+        .populate('usuario', 'nombre apellido img'),
+
+        Gastos.countDocuments()
+    ]);
 
     res.json({
         ok: true,
-        gastos
+        gastos,
+        total
     });
-}
+};
 
 const crearGasto = async(req, res = response) => {
 
@@ -21,17 +31,17 @@ const crearGasto = async(req, res = response) => {
     const gastos = new Gastos({
         usuario: uid,
         ...req.body
-    })
+    });
 
     try {
 
         const gastosDB = await gastos.save();
 
+
         res.json({
             ok: true,
             gasto: gastosDB
         });
-
 
     } catch (error) {
         console.log(error);

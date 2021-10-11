@@ -16,6 +16,6 @@ const HistoricoSchema = Schema({
 HistoricoSchema.method('toJSON', function() {
     const { __v, ...Object } = this.toObject();
     return Object;
-})
+});
 
 module.exports = model('Historico', HistoricoSchema);

@@ -20,19 +20,27 @@ const login = async(req, res = response) => {
         if (!usuarioDB) {
             return res.status(404).json({
                 ok: false,
-                msg: 'Los datos o alguno de los datos no son correctos - Email'
-            })
+                msg: 'Los datos o alguno de los datos no son correctos'
+            });
         }
 
         //Verficar constraseña
         const validPassword = bcrypt.compareSync(password, usuarioDB.password);
+        // const validPass = await Usuario.findOne({ password });
 
         if (!validPassword) {
             return res.status(400).json({
                 ok: false,
-                msg: 'Los datos o alguno de los datos no son correctos - Constraseña'
+                msg: 'Los datos o alguno de los datos no son correctos'
             });
         }
+
+        // if (!validPass) {
+        //     return res.status(400).json({
+        //         ok: false,
+        //         msg: 'Los datos o alguno de los datos no son correctos - clave'
+        //     });
+        // }
 
         //Generar el Token -JWT. Si llega el punto de logueo Ok.
         const token = await generarJWT(usuarioDB.id);
@@ -40,14 +48,14 @@ const login = async(req, res = response) => {
         res.json({
             ok: true,
             token
-        })
+        });
 
     } catch (error) {
         console.log(error);
         res.status(500).json({
             ok: false,
             msg: 'Error inesperado - login'
-        })
+        });
     }
 
 }
@@ -58,9 +66,17 @@ const renovarToken = async(req, res = response) => {
 
     const token = await generarJWT(uid);
 
+    //Obtener el usuario por uid al renovar el token
+    const usuario = await Usuario.findById(uid);
+
+
+
+
+
     res.json({
         ok: true,
-        token
+        token,
+        usuario
     });
 }
 
