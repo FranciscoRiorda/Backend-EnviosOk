@@ -16,7 +16,7 @@ router.post('/', [
     check('email', 'El Email es obligatorio').isEmail(),
     check('password', 'La contraseña es obligatoria').not().notEmpty(),
     validarCampos
-], login)
+], login);
 
 router.get('/renovar',
     validarJWT,
