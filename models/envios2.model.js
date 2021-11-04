@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const EnviosSchema = Schema({
+const Envios2Schema = Schema({
 
     fechaEnvio: {
         type: String,
@@ -30,11 +30,11 @@ const EnviosSchema = Schema({
     img: {
         type: String
     }
-}, { collection: 'Envios' });
+}, { collection: 'Envios2' });
 
-EnviosSchema.method('toJSON', function() {
+Envios2Schema.method('toJSON', function() {
     const { __v, ...Object } = this.toObject();
     return Object;
 })
 
-module.exports = model('Envios', EnviosSchema);
+module.exports = model('Envios2', Envios2Schema);

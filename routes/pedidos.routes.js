@@ -7,13 +7,19 @@ const { check } = require('express-validator');
 const { validarCampos } = require('../middlewares/validar-campos');
 const { validarJWT } = require('../middlewares/validar-jwt');
 
-const { getPedidos, crearPedido, actualizarPedido, borrarPedido, getPedidosById } = require('../controllers/pedidos.controllers');
+const { getPedidos, crearPedido, actualizarPedido, borrarPedido, getPedidosById, getPedidosPorFecha, getPedidosPorEstadoRetiro, getPedidosPorEstadoEntrega, getPedidos2 } = require('../controllers/pedidos.controllers');
 
 
 const router = Router();
 
 //Obtener pedido
 router.get('/', validarJWT, getPedidos);
+router.get('/pedidos2', validarJWT, getPedidos2);
+
+//Reportes
+router.get('/fecha/:fechaInicial/:fechaFinal', validarJWT, getPedidosPorFecha);
+router.get('/estado/:estadoRetiro', getPedidosPorEstadoRetiro);
+router.get('/estadoEntrega/:estadoEntrega', getPedidosPorEstadoEntrega);
 
 //Crear pedido
 router.post('/', [

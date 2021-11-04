@@ -5,9 +5,9 @@
              icono: 'mdi mdi-gauge',
              submenu: [
 
-                 { titulo: 'Envíos', url: 'envios' },
+                 //  { titulo: 'Envíos', url: 'envios' },
                  { titulo: 'Gastos', url: 'gastos' },
-                 { titulo: 'Pedidos', url: 'pedidos' }
+                 { titulo: 'Envíos', url: 'pedidos' }
 
              ]
          },
@@ -37,7 +37,7 @@
      ];
 
      if (role === 'ADMIN_ROLE') {
-         menu[1].submenu.unshift({ titulo: 'Balances del mes', url: 'balance' }, { titulo: 'Histórico', url: 'historico' }, { titulo: 'Rendimientos', url: 'rendimientos' });
+         menu[1].submenu.unshift({ titulo: 'Registro de Envíos', url: 'registroEnvios' }, { titulo: 'Registro de Gastos', url: 'registroGastos' }, { titulo: 'Rendimientos', url: 'rendimientos' });
          menu[2].submenu.unshift({ titulo: 'Usuarios', url: 'usuarios' });
      }
      return menu;

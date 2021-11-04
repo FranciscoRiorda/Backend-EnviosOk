@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose')
 
-const HistoricoSchema = Schema({
+const RegistroGastosSchema = Schema({
 
     dineroDisponible: {
         type: String,
@@ -11,11 +11,11 @@ const HistoricoSchema = Schema({
         type: Schema.Types.ObjectId,
         ref: 'Usuario'
     }
-}, { collection: 'Historico' });
+}, { collection: 'RegistroGastos' });
 
-HistoricoSchema.method('toJSON', function() {
+RegistroGastosSchema.method('toJSON', function() {
     const { __v, ...Object } = this.toObject();
     return Object;
 });
 
-module.exports = model('Historico', HistoricoSchema);
+module.exports = model('RegistroGastos', RegistroGastosSchema);

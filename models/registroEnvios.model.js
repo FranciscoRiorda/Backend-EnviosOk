@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 
-const BalanceSchema = Schema({
+const RegistroEnviosSchema = Schema({
 
     mesAño: {
         type: String,
@@ -40,11 +40,11 @@ const BalanceSchema = Schema({
         require: true,
         default: 'En Curso'
     }
-}, { collection: 'Balance' });
+}, { collection: 'RegistroEnvios' });
 
-BalanceSchema.method('toJSON', function() {
+RegistroEnviosSchema.method('toJSON', function() {
     const { __v, ...Object } = this.toObject();
     return Object;
 })
 
-module.exports = model('Balance', BalanceSchema);
+module.exports = model('RegistroEnvios', RegistroEnviosSchema);

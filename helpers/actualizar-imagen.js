@@ -1,7 +1,7 @@
 const fs = require('fs'); //File System. Lo utilizaremos para corroborar si hay un pathViejo y reemplazar la img
 
 const Usuario = require('../models/usuario.model');
-const Envios = require('../models/envios.model');
+const Envios2 = require('../models/envios2.model');
 const Gastos = require('../models/gastos.model');
 const Pedidos = require('../models/pedidos.model');
 
@@ -73,17 +73,17 @@ const actualizarImagen = async(tipo, id, nombreArchivo) => {
 
             break;
 
-        case 'envios':
+        case 'envios2':
 
-            const envio = await Envios.findById(id);
-            if (!envio) {
-                console.log('No se encontró envios con ese id');
+            const envio2 = await Envios2.findById(id);
+            if (!envio2) {
+                console.log('No se encontró envios2 con ese id');
                 return false;
             }
 
 
-            envio.img = nombreArchivo;
-            await envio.save();
+            envio2.img = nombreArchivo;
+            await envio2.save();
             return true;
 
 

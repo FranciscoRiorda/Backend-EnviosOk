@@ -11,8 +11,30 @@ const getPedidos = async(req, res = response) => {
         Pedidos
         .find({}, 'nombreCliente mailCliente diaRetiro domicilioRetiro telEntregaPaq estadoRetiro diaEntrega domicilioEntrega telRecibePaq estadoEntrega costoEnvio observaciones')
         .skip(desde)
-        .limit(50)
-        .populate('usuario', 'nombre apellido email img'),
+        .limit(10)
+        .populate('usuario', 'nombre apellido email img')
+        .sort({ diaRetiro: 'desc' }),
+
+        Pedidos.countDocuments()
+    ]);
+
+    res.json({
+        ok: true,
+        pedidos,
+        total
+    });
+};
+
+const getPedidos2 = async(req, res = response) => {
+
+    const desde = Number(req.query.desde) || 0;
+
+    const [pedidos, total] = await Promise.all([
+        Pedidos
+        .find({}, 'nombreCliente mailCliente diaRetiro domicilioRetiro telEntregaPaq estadoRetiro diaEntrega domicilioEntrega telRecibePaq estadoEntrega costoEnvio observaciones')
+        .skip(desde)
+        .populate('usuario', 'nombre apellido email img')
+        .sort({ diaRetiro: 'desc' }),
 
         Pedidos.countDocuments()
     ]);
@@ -48,6 +70,69 @@ const getPedidosById = async(req, res = response) => {
     }
 };
 
+const getPedidosPorFecha = async(req, res = response) => {
+    const fechaInicial = req.params.fechaInicial; // ejemplo: '2019-03-26'
+    const fechaFinal = req.params.fechaFinal;
+
+    Pedidos.find({ $and: [{ diaRetiro: { $gte: fechaInicial, $lte: fechaFinal } }] }, 'nombreCliente mailCliente diaRetiro domicilioRetiro telEntregaPaq estadoRetiro diaEntrega domicilioEntrega telRecibePaq estadoEntrega costoEnvio observaciones', (err, pedidos) => {
+            if (err) {
+                console.log(err.message);
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+            if (!pedidos) { // si no se consiguen documentos
+                return res.status(400).json({
+                    message: 'No se ha encontrado pedidos en la fecha dada.'
+                });
+            }
+            return res.status(200).json(pedidos);
+        })
+        .sort({ diaRetiro: 'desc' });
+};
+
+const getPedidosPorEstadoRetiro = async(req, res = response) => {
+    const estadoRetiro = req.params.estadoRetiro; // ejemplo: '2019-03-26'
+
+    Pedidos.find({ $and: [{ estadoRetiro: { $eq: estadoRetiro } }] }, 'nombreCliente mailCliente diaRetiro domicilioRetiro telEntregaPaq estadoRetiro diaEntrega domicilioEntrega telRecibePaq estadoEntrega costoEnvio observaciones', (err, pedidos) => {
+            if (err) {
+                console.log(err.message);
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+            if (!pedidos) { // si no se consiguen documentos
+                return res.status(400).json({
+                    message: 'No se ha encontrado pedidos en el estado asignado.'
+                });
+            }
+            return res.status(200).json(pedidos);
+        })
+        .sort({ diaRetiro: 'desc' })
+        .limit(50);
+};
+
+
+const getPedidosPorEstadoEntrega = async(req, res = response) => {
+    const estadoEntrega = req.params.estadoEntrega; // ejemplo: '2019-03-26'
+
+    Pedidos.find({ $and: [{ estadoEntrega: { $eq: estadoEntrega } }] }, 'nombreCliente mailCliente diaRetiro domicilioRetiro telEntregaPaq estadoRetiro diaEntrega domicilioEntrega telRecibePaq estadoEntrega costoEnvio observaciones', (err, pedidos) => {
+            if (err) {
+                console.log(err.message);
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+            if (!pedidos) { // si no se consiguen documentos
+                return res.status(400).json({
+                    message: 'No se ha encontrado pedidos en el estado asignado.'
+                });
+            }
+            return res.status(200).json(pedidos);
+        })
+        .sort({ diaRetiro: 'desc' })
+        .limit(50);
+};
 
 //Petición asincrona 'async'
 const crearPedido = async(req, res = response) => {
@@ -72,7 +157,7 @@ const crearPedido = async(req, res = response) => {
         console.log(error);
         res.status(500).json({
             ok: false,
-            msg: 'Error insesperado al crear usuario'
+            msg: 'Error insesperado al crear pedido'
         });
     }
 };
@@ -139,7 +224,7 @@ const borrarPedido = async(req, res = response) => {
     } catch (error) {
         return res.status(500).json({
             ok: false,
-            msg: 'Error inesperado al borrar pedido'
+            msg: 'Error inesperado al borrar Pedido'
         });
     }
 };
@@ -147,8 +232,12 @@ const borrarPedido = async(req, res = response) => {
 
 module.exports = {
     getPedidos,
+    getPedidos2,
     crearPedido,
     actualizarPedido,
     borrarPedido,
-    getPedidosById
+    getPedidosById,
+    getPedidosPorFecha,
+    getPedidosPorEstadoRetiro,
+    getPedidosPorEstadoEntrega
 };

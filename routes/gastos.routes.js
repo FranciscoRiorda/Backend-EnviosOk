@@ -8,13 +8,28 @@ const { validarCampos } = require('../middlewares/validar-campos')
 
 const { validarJWT } = require('../middlewares/validar-jwt');
 
-const { getGastos, crearGasto, actualizarGasto, borrarGasto } = require('../controllers/gastos.controllers');
+const {
+    getGastos,
+    crearGasto,
+    actualizarGasto,
+    borrarGasto,
+    getGastosPorFecha,
+    getGastosTotales,
+    getRendimientosPorFecha,
+    getGastos2,
+} = require('../controllers/gastos.controllers');
 
 
 const router = Router();
 
 //Obtener envio
 router.get('/', getGastos);
+router.get('/gastos2', getGastos2);
+router.get('/gastosTotales', getGastosTotales);
+
+//Reportes
+router.get('/fecha/:fechaInicial/:fechaFinal', getGastosPorFecha);
+
 
 //Crear envio
 router.post('/', [
@@ -39,6 +54,8 @@ router.put('/:id', [
 
 
 router.delete('/:id', validarJWT, borrarGasto);
+
+
 
 //Exportar ruta para usarlo en otros 
 module.exports = router;

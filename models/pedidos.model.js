@@ -57,7 +57,7 @@ const PedidosSchema = Schema({
         default: 'Pendiente'
     },
     costoEnvio: {
-        type: String,
+        type: Number,
         require: true
     },
     observaciones: {
