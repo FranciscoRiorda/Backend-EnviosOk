@@ -37,7 +37,7 @@
      ];
 
      if (role === 'ADMIN_ROLE') {
-         menu[1].submenu.unshift({ titulo: 'Registro de Envíos', url: 'registroEnvios' }, { titulo: 'Registro de Gastos', url: 'registroGastos' }, { titulo: 'Rendimientos', url: 'rendimientos' });
+         menu[1].submenu.unshift({ titulo: 'Registro de Envíos', url: 'registroEnvios' }, { titulo: 'Registro de Gastos', url: 'registroGastos' }, { titulo: 'Tablero de Control', url: 'rendimientos' });
          menu[2].submenu.unshift({ titulo: 'Usuarios', url: 'usuarios' });
      }
      return menu;
